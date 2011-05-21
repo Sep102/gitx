@@ -1275,7 +1275,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export PATH=$PATH:$HOME/bin:$HOME/local/bin:/sw/bin:/opt/local/bin:`\"$TARGET_BUILD_DIR\"/gitx --git-path`\nVERSION=$(cd \"$PROJECT_DIR\";git describe)\nLONG_VERSION=$(echo $VERSION | sed -e \"s/\\-/\\./\" -e \"s/^v//\" -e \"s/-.*//\")\nSHORT_VERSION=$(echo $VERSION | sed -e \"s/\\-.*//\" -e \"s/^v//\")\n\necho -n \"#define LONG_VERSION $LONG_VERSION\n#define GIT_VERSION $VERSION\n#define SHORT_VERSION $SHORT_VERSION\" > \"$PROJECT_TEMP_DIR/revision\"\ntouch Info.plist";
+			shellScript = "export PATH=$PATH:$HOME/bin:$HOME/local/bin:/sw/bin:/opt/local/bin:$($TARGET_BUILD_DIR/gitx --git-path)\nVERSION=$(cd \"$PROJECT_DIR\";git describe)\nLONG_VERSION=$(echo $VERSION | sed -e \"s/\\-/\\./\" -e \"s/^v//\" -e \"s/-.*//\")\nSHORT_VERSION=$(echo $VERSION | sed -e \"s/\\-.*//\" -e \"s/^v//\")\n\necho -n \"#define LONG_VERSION $LONG_VERSION\n#define GIT_VERSION $VERSION\n#define SHORT_VERSION $SHORT_VERSION\" > \"$PROJECT_TEMP_DIR/revision\"\ntouch Info.plist";
 		};
 		F5CF04A20EAE696C00D75C81 /* Copy HTML files */ = {
 			isa = PBXShellScriptBuildPhase;
