@@ -628,7 +628,7 @@
 	NSUInteger index = [[splitView subviews] indexOfObject:subview];
 	// this method (and canCollapse) are called by the splitView to decide how to collapse on double-click
 	// we compare our two subviews, so that always the smaller one is collapsed.
-	if([[[splitView subviews] objectAtIndex:index] frame].size.height < [[[splitView subviews] objectAtIndex:((index+1)%2)] frame].size.height) {
+	if([[[splitView subviews] objectAtIndex:index] frame].size.width < [[[splitView subviews] objectAtIndex:((index+1)%2)] frame].size.width) {
 		return TRUE;
 	}
 	return FALSE;
@@ -641,7 +641,7 @@
 
 - (CGFloat)splitView:(NSSplitView *)splitView constrainMaxCoordinate:(CGFloat)proposedMax ofSubviewAt:(NSInteger)dividerIndex
 {
-	return [splitView frame].size.height - [splitView dividerThickness] - historySplitView.bottomViewMin;
+	return [splitView frame].size.width - [splitView dividerThickness] - historySplitView.bottomViewMin;
 }
 
 // while the user resizes the window keep the upper (history) view constant and just resize the lower view

@@ -17,19 +17,19 @@ static NSImage *grip;
 {
 	NSString *barPath = [[NSBundle mainBundle] pathForResource:@"mainSplitterBar" ofType:@"tiff"];
 	bar = [[NSImage alloc] initWithContentsOfFile: barPath];
-	[bar setFlipped: YES];
 
 	NSString *gripPath = [[NSBundle mainBundle] pathForResource:@"mainSplitterDimple" ofType:@"tiff"];
 	grip = [[NSImage alloc] initWithContentsOfFile: gripPath];
-	[grip setFlipped: YES];
 }
 
 - (void)drawDividerInRect:(NSRect)aRect
 {
 	// Draw bar and grip onto the canvas
 	NSRect gripRect = aRect;
-	gripRect.origin.x = (NSMidX(aRect) - ([grip size].width/2));
-	gripRect.size.width = 8;
+	//gripRect.origin.x = (NSMidX(aRect) - ([grip size].width/2));
+	gripRect.origin.y = (NSMidY(aRect) - ([grip size].height/2));
+	gripRect.size.width = 10;
+	gripRect.size.height = 8;
 	
 	[self lockFocus];
 	[bar drawInRect:aRect fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.0];
@@ -40,6 +40,11 @@ static NSImage *grip;
 - (CGFloat)dividerThickness
 {
 	return 10.0;
+}
+
+- (BOOL)isVertical
+{
+	return YES;
 }
 
 @end
