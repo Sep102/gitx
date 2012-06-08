@@ -85,15 +85,17 @@ var findParentElementByTag = function (el, tagName)
 var setSelectHandlers = function()
 {
 	document.onmousedown = function(event) {
+		if(event.metaKey) return;
 		if(event.which != 1) return false;
 		deselect();
 		currentSelection = false;
 	}
-	document.onselectstart = function () {return false;}; /* prevent normal text selection */
 
 	var list = document.getElementsByClassName("lines");
 
 	document.onmouseup = function(event) {
+		if (event.metaKey) return;
+
 		// Handle button releases outside of lines list
 		for (i = 0; i < list.length; ++i) {
 			file = list[i];
@@ -105,8 +107,11 @@ var setSelectHandlers = function()
 	for (i = 0; i < list.length; ++i) {
 		var file = list[i];
 		file.ondblclick = function (event) {
+			if (event.metaKey) return;
+
 			var target = findParentElementByTag(event.target, "div");
 			var file = target.parentNode;
+
 			if (file.id = "selected")
 				file = file.parentNode;
 			var start = target;
@@ -120,6 +125,8 @@ var setSelectHandlers = function()
 		};
 
 		file.onmousedown = function(event) {
+			if (event.metaKey) return;
+
 			if (event.which != 1) 
 				return false;
 			var elem_class = event.target.getAttribute("class")
@@ -160,6 +167,8 @@ var setSelectHandlers = function()
 
 			var srcElement = findParentElementByTag(event.srcElement, "div");
 			file.onmouseover = function(event2) {
+				if (event.metaKey);
+
 				var target2 = findParentElementByTag(event2.target, "div");
 				showSelection(file, srcElement, target2);
 				return false;
