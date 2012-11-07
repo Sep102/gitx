@@ -50,7 +50,7 @@
 	[[colors objectAtIndex: c % [colors count]] set];
 	
 	NSBezierPath * path = [NSBezierPath bezierPath];
-	[path setLineWidth:2];
+	[path setLineWidth:1];
 	
 	[path moveToPoint: source];
 	[path lineToPoint: center];
@@ -84,7 +84,7 @@
 	[[NSColor blackColor] set];
 	[path fill];
 	
-	NSRect smallOval = { columnOrigin.x - 3, columnOrigin.y + r.size.height * 0.5 - 3, 6, 6};
+	NSRect smallOval = { columnOrigin.x - 4, columnOrigin.y + r.size.height * 0.5 - 4, 8, 8};
 
 	if ( [self isCurrentCommit ] ) {
 		[[NSColor colorWithCalibratedRed: 0Xfc/256.0 green:0Xa6/256.0 blue: 0X4f/256.0 alpha: 1.0] set];
