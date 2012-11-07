@@ -135,7 +135,7 @@
 	
 	[style setAlignment:NSCenterTextAlignment];
 	[attributes setObject:style forKey:NSParagraphStyleAttributeName];
-	[attributes setObject:[NSFont fontWithName:@"Helvetica" size:9] forKey:NSFontAttributeName];
+	[attributes setObject:[NSFont fontWithName:@"Helvetica" size:10] forKey:NSFontAttributeName];
 
 	//if (selected)
 	//	[attributes setObject:[NSColor alternateSelectedControlTextColor] forKey:NSForegroundColorAttributeName];
@@ -193,16 +193,32 @@
 
 - (void) drawLabelAtIndex:(int)index inRect:(NSRect)rect
 {
+    rect = CGRectInset(rect, 0.0, -1.0);
+    
 	NSArray *refs = self.objectValue.refs;
 	PBGitRef *ref = [refs objectAtIndex:index];
-	
-	NSMutableDictionary* attributes = [self attributesForRefLabelSelected:[self isHighlighted]];
-	NSBezierPath *border = [NSBezierPath bezierPathWithRoundedRect:rect cornerRadius: 2.0];
-	[[self colorForRef:ref] set];
-	[border fill];
-	
-	[[ref shortName] drawInRect:rect withAttributes:attributes];
-	[border stroke];	
+
+    NSColor *color = [self colorForRef:ref];
+    NSColor *textColor = [color blendedColorWithFraction:0.8 ofColor:[NSColor blackColor]];
+    
+    NSShadow *shadow = [[NSShadow alloc] init];
+    [shadow setShadowOffset:NSMakeSize(0,-1)];
+    [shadow setShadowColor:[NSColor colorWithCalibratedWhite:1.0 alpha:0.5]];
+    [shadow setShadowBlurRadius:0];
+    
+    NSMutableDictionary* attributes = [self attributesForRefLabelSelected:[self isHighlighted]];
+
+    if (![self isHighlighted]) {
+        color = [color blendedColorWithFraction:0.3 ofColor:[NSColor whiteColor]];
+    }
+    
+    NSBezierPath *border = [NSBezierPath bezierPathWithRoundedRect:rect cornerRadius:10.0];
+    [color setFill];
+    [border fill];
+
+    [attributes setObject:textColor forKey:NSForegroundColorAttributeName];
+    [attributes setObject:shadow forKey:NSShadowAttributeName];
+    [[ref shortName] drawInRect:CGRectOffset(rect, 0.0, 1.0) withAttributes:attributes];
 }
 
 - (void) drawRefsInRect: (NSRect *)refRect
