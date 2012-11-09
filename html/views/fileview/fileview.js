@@ -8,6 +8,12 @@ var showFile = function(txt) {
 	return;
 }
 
+var setMessage = function(message) {
+	$("message").style.display = "";
+	$("message").innerHTML = message.escapeHTML();
+	$("source").style.display = "none";
+}
+
 var test=function(txt) {
 	SyntaxHighlighter.defaults['toolbar'] = false;
 	SyntaxHighlighter.highlight();

@@ -20,6 +20,8 @@
 @interface GLFileView ()
 
 - (void)saveSplitViewPosition;
+- (void)updateSearch;
+- (void)updateSearchUI;
 
 @end
 
@@ -316,9 +318,67 @@
 	[fileListSplitView setHidden:NO];
 }
 
+// -------------
+// File search
+// -------------
 
+#pragma mark -
+#pragma mark Search
+
+NSString *searchString;
+
+- (NSString *)numberOfMatchesString
+{
+	if ([view resultCount] == 0)
+		return @"Not found";
+
+	if ([view resultCount] == 1)
+		return @"1 match";
+
+	return [NSString stringWithFormat:@"%d matches", [view resultCount]];
+}
+
+- (void) updateSearch
+{
+  [view search:searchField update:YES grabFocus:NO direction:YES];
+  [self updateSearchUI];
+}
+
+- (void) updateSearchUI
+{
+  if ([searchString length] == 0) {
+    [numberOfMatches setHidden:YES];
+		[stepper setHidden:YES];
+  }
+  else {
+    [numberOfMatches setHidden:NO];
+		[stepper setHidden:NO];
+    [numberOfMatches setStringValue:[self numberOfMatchesString]];
+    [stepper setEnabled:([view resultCount]>0)];
+  }
+}
+
+- (IBAction)searchFieldChanged:(id)sender
+{
+  BOOL update=[[searchField stringValue] isEqualToString:searchString]? NO: YES;
+  searchString=[searchField stringValue];
+  [view search:searchField update:update grabFocus:YES direction:YES];
+  [self updateSearchUI];
+}
+
+
+- (IBAction)stepperPressed:(id)sender {
+  NSInteger selectedSegment = [sender selectedSegment];
+
+	if (selectedSegment == 0)
+    [view search:searchField update:NO grabFocus:YES direction:NO];
+	else
+		[view search:searchField update:NO grabFocus:YES direction:YES];
+}
 
 @synthesize groups;
 @synthesize logFormat;
+@synthesize searchField;
+@synthesize numberOfMatches;
 
 @end

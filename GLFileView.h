@@ -12,6 +12,7 @@
 #import "PBGitCommit.h"
 #import "PBGitHistoryController.h"
 #import "PBRefContextDelegate.h"
+#import "SearchWebView.h"
 
 @class PBGitGradientBarView;
 
@@ -22,6 +23,9 @@
 	NSString *logFormat;
 	IBOutlet NSView *accessoryView;
 	IBOutlet NSSplitView *fileListSplitView;
+  IBOutlet NSSearchField *searchField;
+  IBOutlet NSSegmentedControl *stepper;
+  IBOutlet NSTextField *numberOfMatches;
 }
 
 - (void)showFile;
@@ -29,7 +33,14 @@
 - (NSString *)parseBlame:(NSString *)txt;
 - (NSString *)parseHTML:(NSString *)txt;
 
+- (IBAction)searchFieldChanged:(NSSearchField *)sender;
+- (IBAction)stepperPressed:(id)sender;
+
 @property(retain) NSMutableArray *groups;
 @property(retain) NSString *logFormat;
+
+@property (strong) IBOutlet NSSegmentedControl *stepper;
+@property (strong) IBOutlet NSSearchField *searchField;
+@property (strong) IBOutlet NSTextField *numberOfMatches;
 
 @end
