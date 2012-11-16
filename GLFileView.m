@@ -260,7 +260,7 @@
 #pragma mark NSSplitView delegate methods
 
 #define kFileListSplitViewLeftMin 120
-#define kFileListSplitViewRightMin 180
+#define kFileListSplitViewRightMin 350
 #define kHFileListSplitViewPositionDefault @"File List SplitView Position"
 
 - (CGFloat)splitView:(NSSplitView *)splitView constrainMinCoordinate:(CGFloat)proposedMin ofSubviewAt:(NSInteger)dividerIndex
