@@ -285,9 +285,13 @@
 	NSRect leftFrame = [leftView frame];
 	leftFrame.size.height = newFrame.size.height;
 
+  float rem_width = newFrame.size.width - kFileListSplitViewRightMin;
 	if ((newFrame.size.width - leftFrame.size.width - dividerThickness) < kFileListSplitViewRightMin) {
-		leftFrame.size.width = newFrame.size.width - kFileListSplitViewRightMin - dividerThickness;
+		leftFrame.size.width = rem_width - dividerThickness;
 	}
+  else if (leftFrame.size.width < kFileListSplitViewLeftMin && rem_width > 0) {
+    leftFrame.size.width = rem_width > kFileListSplitViewLeftMin ? kFileListSplitViewLeftMin : rem_width;
+  }
 
 	NSView *rightView = [[splitView subviews] objectAtIndex:1];
 	NSRect rightFrame = [rightView frame];
