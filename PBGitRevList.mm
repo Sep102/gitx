@@ -12,7 +12,6 @@
 #import "PBGitGrapher.h"
 #import "PBGitRevSpecifier.h"
 
-#include <ext/stdio_filebuf.h>
 #include <iostream>
 #include <string>
 #include <map>
@@ -93,6 +92,24 @@ using namespace std;
 }
 
 
+NSString *getLine(FILE *f, int delim = '\1')
+{
+    static char *s = NULL;
+    static size_t len = 0;
+
+    if (f == NULL) {
+        return nil;
+    }
+
+    ssize_t read = getdelim(&s, &len, delim, f);
+    if (read <= 0) {
+        return nil;
+    }
+
+    s[read - 1] = '\0';
+    return [NSString stringWithUTF8String:s];
+}
+
 - (void) walkRevisionListWithSpecifier:(PBGitRevSpecifier*)rev
 {
 	NSDate *start = [NSDate date];
@@ -121,82 +138,74 @@ using namespace std;
 	NSFileHandle *handle = [task.standardOutput fileHandleForReading];
 	
 	int fd = [handle fileDescriptor];
-	__gnu_cxx::stdio_filebuf<char> buf(fd, std::ios::in);
-	std::istream stream(&buf);
+    FILE *f = fdopen(fd, "r");
 
 	int num = 0;
 	while (true) {
 		if ([currentThread isCancelled])
 			break;
 
-		string sha;
-		if (!getline(stream, sha, '\1'))
+        NSString *sha = getLine(f);
+		if (sha == nil || [sha length] == 0)
 			break;
 
-		// From now on, 1.2 seconds
-		string encoding_str;
-		getline(stream, encoding_str, '\1');
+        // From now on, 1.2 seconds
+        NSString *encoding_str = getLine(f);
 		NSStringEncoding encoding = NSUTF8StringEncoding;
-		if (encoding_str.length())
+		if (encoding_str != nil && [encoding_str length] > 0)
 		{
-			if (encodingMap.find(encoding_str) != encodingMap.end()) {
-				encoding = encodingMap[encoding_str];
+            auto encodingIter = encodingMap.find([encoding_str UTF8String]);
+            if (encodingIter != encodingMap.end()) {
+                encoding = encodingIter->second;
 			} else {
-				encoding = CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding((CFStringRef)[NSString stringWithUTF8String:encoding_str.c_str()]));
-				encodingMap[encoding_str] = encoding;
+                encoding = [encoding_str fastestEncoding];
+				encodingMap[[encoding_str UTF8String]] = encoding;
 			}
 		}
 
 		git_oid oid;
-		git_oid_fromstr(&oid, sha.c_str());
+		git_oid_fromstr(&oid, [sha UTF8String]);
 		PBGitCommit *newCommit = [PBGitCommit commitWithRepository:repository andSha:[PBGitSHA shaWithOID:oid]];
 
-		string author;
-		getline(stream, author, '\1');
+        NSString *author = getLine(f);
+        NSString *committer = getLine(f);
+        NSString *subject = getLine(f);
+        NSString *parentString = getLine(f);
 
-		string committer;
-		getline(stream, committer, '\1');
-
-		string subject;
-		getline(stream, subject, '\1');
-
-		string parentString;
-		getline(stream, parentString, '\1');
-		if (parentString.size() != 0)
+		if (parentString != nil && [parentString length] > 0)
 		{
-			if (((parentString.size() + 1) % 41) != 0) {
-				NSLog(@"invalid parents: %zu", parentString.size());
+			if ((([parentString length] + 1) % 41) != 0) {
+				NSLog(@"invalid parents: %zu", [parentString length]);
 				continue;
 			}
-			int nParents = (parentString.size() + 1) / 41;
+			int nParents = ([parentString length] + 1) / 41;
 			NSMutableArray *parents = [NSMutableArray arrayWithCapacity:nParents];
 			int parentIndex;
 			for (parentIndex = 0; parentIndex < nParents; ++parentIndex)
-				[parents addObject:[PBGitSHA shaWithCString:parentString.substr(parentIndex * 41, 40).c_str()]];
+                [parents addObject:[PBGitSHA shaWithString:[parentString substringWithRange:NSMakeRange(parentIndex * 41, 40)]]];
 
 			[newCommit setParents:parents];
 		}
 
 		int time;
-		stream >> time;
+        fscanf(f, "%d", &time);
 
-		[newCommit setSubject:[NSString stringWithCString:subject.c_str() encoding:encoding]];
-		[newCommit setAuthor:[NSString stringWithCString:author.c_str() encoding:encoding]];
-		[newCommit setCommitter:[NSString stringWithCString:committer.c_str() encoding:encoding]];
+		[newCommit setSubject:subject];
+		[newCommit setAuthor:author];
+		[newCommit setCommitter:committer];
 		[newCommit setTimestamp:time];
 		
 		if (showSign)
 		{
-			char c;
-			stream >> c; // Remove separator
-			stream >> c;
+            char c = fgetc(f); // Remove separator
+
+            c = fgetc(f);
 			if (c != '>' && c != '<' && c != '^' && c != '-')
 				NSLog(@"Error loading commits: sign not correct");
 			[newCommit setSign: c];
 		}
 
-		char c;
-		stream >> c;
+        char c = fgetc(f);
 		if (c != '\0')
 			cout << "Error" << endl;
 

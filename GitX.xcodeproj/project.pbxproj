@@ -790,8 +790,6 @@
 				31460C79124185B900B90AED /* MGScopeBar */,
 				47DBDBC80E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.h */,
 				47DBDBC90E95016F00671A1E /* PBNSURLPathUserDefaultsTransfomer.m */,
-				F5AD56770E79B78100EDAAFE /* PBCommitList.h */,
-				F5AD56780E79B78100EDAAFE /* PBCommitList.m */,
 				F56524B90E02D22D00F03B52 /* NSFileHandleExt.m */,
 				F56524BA0E02D22D00F03B52 /* NSFileHandleExt.h */,
 				F562C8850FE1766C000EC528 /* NSString_RegEx.h */,
@@ -1374,6 +1372,7 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)\"",
@@ -1391,7 +1390,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
 				INFOPLIST_PREPROCESS = YES;
-				INSTALL_PATH = "$(HOME)/Applications";
+				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = libgit2;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = GitX;
@@ -1421,7 +1420,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
 				INFOPLIST_PREPROCESS = YES;
-				INSTALL_PATH = "$(HOME)/Applications";
+				INSTALL_PATH = "";
 				LIBRARY_SEARCH_PATHS = libgit2;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = GitX;
@@ -1432,7 +1431,7 @@
 		26FC0A890875C7B200E6366F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
 				GCC_ENABLE_OBJC_GC = required;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = DEBUG_BUILD;
@@ -1447,7 +1446,7 @@
 		26FC0A8A0875C7B200E6366F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
 				GCC_ENABLE_OBJC_GC = required;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
