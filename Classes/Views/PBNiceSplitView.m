@@ -26,11 +26,11 @@ static NSImage *grip;
 {
 	// Draw bar and grip onto the canvas
 	NSRect gripRect = aRect;
-	gripRect.origin.x = (NSMidX(aRect) - ([grip size].width/2));
-	gripRect.size.width = 8;
+	gripRect.origin.y = (NSMidY(aRect) - ([grip size].height/2));
+	gripRect.size.height = 2;
 	
 	[self lockFocus];
-	[bar drawInRect:aRect fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.0 respectFlipped:YES hints:nil];
+	//[bar drawInRect:aRect fromRect:NSZeroRect operation:NSCompositeCopy fraction:1.0 respectFlipped:YES hints:nil];
 	[grip drawInRect:gripRect fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0 respectFlipped:YES hints:nil];
 
 	[self unlockFocus];
@@ -38,7 +38,7 @@ static NSImage *grip;
 
 - (CGFloat)dividerThickness
 {
-	return 10.0;
+	return 2.0;
 }
 
 @end
