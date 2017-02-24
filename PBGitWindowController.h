@@ -31,7 +31,7 @@
 	IBOutlet NSToolbarItem *finderItem;
 }
 
-@property (assign) __weak PBGitRepository *repository;
+@property (assign, weak) PBGitRepository *repository;
 
 - (id)initWithRepository:(PBGitRepository*)theRepository displayDefault:(BOOL)display;
 

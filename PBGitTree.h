@@ -37,7 +37,7 @@
 @property(copy) NSString* path;
 @property(assign) BOOL leaf;
 @property(retain) PBGitRepository* repository;
-@property(assign) __weak PBGitTree* parent;
+@property(assign, weak) PBGitTree* parent;
 
 @property(readonly) NSArray* children;
 @property(readonly) NSString* fullPath;
